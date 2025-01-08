@@ -1,0 +1,209 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #e9eff1;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Container for the generator */
+.generator {
+    text-align: center;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Title Style */
+.generator h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Style for inputs (like select and text inputs) */
+.generator input,
+.generator select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.generator input:focus,
+.generator select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Big button style */
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    color: #fff;
+    background: #000000;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: #2e2e2e;
+    transform: scale(1.05); /* Adds a subtle scale effect on hover */
+}
+
+button:active {
+    background: #00408a;
+    transform: scale(1);
+}
+
+/* Style for the password output and buttons */
+.password-box {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.password-box input {
+    flex-grow: 1;
+    font-size: 18px;
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    color: #333;
+}
+
+.password-box .button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.password-box button {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #000000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.password-box button:hover {
+    background: #2e2e2e;
+}
+
+/* Message for when the password is copied */
+.copied-message {
+    display: none;
+    color: green;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.copied-message.show {
+    display: block;
+}
+
+/* Style for checkboxes */
+.controls {
+    text-align: left;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.controls label {
+    font-size: 16px;
+    color: #333;
+    margin-left: 10px;
+}
+
+/* Custom checkbox styles */
+.controls input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    appearance: none;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.controls input[type="checkbox"]:checked {
+    background-color: #000000;
+    border-color: #000000;
+}
+
+.controls input[type="checkbox"]:checked::before {
+    content: '✔';
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 2px;
+    font-size: 18px;
+}
+
+.controls input[type="checkbox"]:hover {
+    border-color: #0056b3;
+}
+
+.controls input[type="checkbox"]:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+/* Responsive design: makes the layout more mobile-friendly */
+@media (max-width: 600px) {
+    .generator {
+        padding: 20px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+
+    .password-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .password-box input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .password-box .button-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

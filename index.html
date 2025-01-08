@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de mot de passe🔐- Alexis Roger</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="generator">
+        <h1>Générateur de mots de passe 🔐</h1>
+
+        <div class="controls">
+            <label for="password-length">Longueur du mot de passe :</label>
+            <select id="password-length">
+                <!-- Options générées dynamiquement de 8 à 2400 -->
+                <script>
+                    const select = document.getElementById("password-length");
+                    for (let i = 8; i <= 2400; i++) {  // La longueur minimum commence à 8
+                        const option = document.createElement("option");
+                        option.value = i;
+                        option.textContent = i;
+                        select.appendChild(option);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <div class="controls">
+            <label for="password-count">Nombre de mots de passe:</label>
+            <select id="password-count">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+
+        <div class="controls">
+            <label><input type="checkbox" id="include-lowercase" checked> Lettres minuscules</label>
+        </div>
+
+        <div class="controls">
+            <label><input type="checkbox" id="include-uppercase" checked> Lettres majuscules</label>
+        </div>
+
+        <div class="controls">
+            <label><input type="checkbox" id="include-numbers" checked> Chiffres</label>
+        </div>
+
+        <div class="controls">
+            <label><input type="checkbox" id="include-symbols" checked> Caractères spéciaux</label>
+        </div>
+
+        <button onclick="generatePasswords()">Générer</button>
+
+        <div id="passwords-output" class="output"></div>
+    </div>
+
+    <!-- Footer avec le copyright -->
+    <footer>
+        <p>&copy; 2025 Alexis Roger. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Fonction qui génère des mots de passe selon les critères sélectionnés
+        function generatePasswords() {
+            const length = parseInt(document.getElementById("password-length").value);
+            const count = parseInt(document.getElementById("password-count").value);
+            const includeLowercase = document.getElementById("include-lowercase").checked;
+            const includeUppercase = document.getElementById("include-uppercase").checked;
+            const includeNumbers = document.getElementById("include-numbers").checked;
+            const includeSymbols = document.getElementById("include-symbols").checked;
+
+            if (length < 8) {
+                alert("La longueur du mot de passe doit être d'au moins 8 caractères.");
+                return;
+            }
+
+            const lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const numbers = "0123456789";
+            const symbols = "!@#$%^&*()_+[]{}|;:',.<>?/";
+
+            let charset = "";
+            if (includeLowercase) charset += lowercase;
+            if (includeUppercase) charset += uppercase;
+            if (includeNumbers) charset += numbers;
+            if (includeSymbols) charset += symbols;
+
+            if (!charset) {
+                document.getElementById("passwords-output").innerHTML = "<p>Veuillez sélectionner au moins un type de caractère.</p>";
+                return;
+            }
+
+            let passwords = "";
+
+            // Générer les mots de passe
+            for (let i = 0; i < count; i++) {
+                let password = "";
+                for (let j = 0; j < length; j++) {
+                    const randomIndex = Math.floor(Math.random() * charset.length);
+                    password += charset[randomIndex];
+                }
+                passwords += `
+                <div class="password-box">
+                    <input type="text" class="password" value="${password}" readonly>
+                    <div class="button-container">
+                        <button onclick="reloadPassword(this)">🔄</button>
+                        <button onclick="sharePassword('${password}', this)">📤</button>
+                        <button onclick="copyPassword('${password}', this)">📋</button>
+                    </div>
+                    <div class="copied-message">Copié !</div>
+                </div>`;
+            }
+
+            // Afficher les mots de passe générés
+            document.getElementById("passwords-output").innerHTML = passwords;
+        }
+
+        // Fonction pour regénérer un mot de passe en utilisant les mêmes critères
+        function reloadPassword(button) {
+            const length = parseInt(document.getElementById("password-length").value);
+            const includeLowercase = document.getElementById("include-lowercase").checked;
+            const includeUppercase = document.getElementById("include-uppercase").checked;
+            const includeNumbers = document.getElementById("include-numbers").checked;
+            const includeSymbols = document.getElementById("include-symbols").checked;
+
+            const lowercase = "abcdefghijklmnopqrstuvwxyz";
+            const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const numbers = "0123456789";
+            const symbols = "!@#$%^&*()_+[]{}|;:',.<>?/";
+
+            let charset = "";
+            if (includeLowercase) charset += lowercase;
+            if (includeUppercase) charset += uppercase;
+            if (includeNumbers) charset += numbers;
+            if (includeSymbols) charset += symbols;
+
+            let newPassword = "";
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                newPassword += charset[randomIndex];
+            }
+            const passwordInput = button.parentElement.parentElement.querySelector(".password");
+            passwordInput.value = newPassword;
+        }
+
+        // Fonction pour copier le mot de passe dans le presse-papiers
+        function copyPassword(password, button) {
+            // Vérification de la longueur du mot de passe
+            if (password.length > 2400) {
+                alert("Le mot de passe est trop long pour être copié.");
+                return;
+            }
+
+            navigator.clipboard.writeText(password).then(() => {
+                // Afficher le message "Copié !" sous le bouton
+                const copiedMessage = button.parentElement.parentElement.querySelector(".copied-message");
+                copiedMessage.style.display = "block";
+
+                // Masquer le message après 2 secondes
+                setTimeout(() => {
+                    copiedMessage.style.display = "none";
+                }, 2000);
+            }).catch(err => {
+                alert("Erreur lors de la copie du mot de passe: " + err);
+            });
+        }
+
+        // Fonction pour générer un lien de partage
+        function sharePassword(password, button) {
+            // Vérification de la longueur du mot de passe
+            if (password.length > 2000) {
+                alert("Le mot de passe est trop long pour être partagé via une URL.");
+                return;
+            }
+
+            // Crypter le mot de passe en base64
+            const encryptedPassword = btoa(password); // Crypter le mot de passe
+
+            // S'assurer que l'URL ne dépasse pas la limite de taille (urlencode + base64 peuvent être longs)
+            const link = `share.html?password=${encodeURIComponent(encryptedPassword)}`;
+
+            // Rediriger l'utilisateur vers la page de partage
+            window.location.href = link;
+        }
+    </script>
+
+    <style>
+        /* Style pour le footer */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+    </style>
+</body>
+</html>

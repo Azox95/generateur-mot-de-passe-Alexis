@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lien de partage</title>
+    <style>
+        .message {
+            font-size: 20px;
+            color: green;
+        }
+        .password-box {
+            margin-top: 20px;
+        }
+        .password {
+            font-size: 16px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+        .button-container {
+            display: inline-block;
+            margin-top: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lien de partage</h1>
+    <div id="share-message" class="message"></div>
+    
+    <div class="password-box" id="password-box">
+        <input type="text" id="password-field" class="password" readonly>
+        <div class="button-container">
+            <button onclick="copyPassword()">📋 Copier</button>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour copier le mot de passe dans le presse-papiers
+        function copyPassword() {
+            const passwordField = document.getElementById("password-field");
+            passwordField.select();
+            document.execCommand("copy");
+            alert("Mot de passe copié !");
+            // Une fois copié, on invalide le lien pour qu'il ne soit plus utilisable
+            localStorage.setItem("passwordUsed", "true");
+        }
+
+        // Récupérer le mot de passe crypté depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const encryptedPassword = urlParams.get('password');
+
+        // Déchiffrer le mot de passe (ici, on utilise 'atob' pour la base64)
+        if (encryptedPassword) {
+            try {
+                // Décryptage du mot de passe
+                const password = atob(encryptedPassword); // Conversion de base64 en texte
+                // Afficher le mot de passe et le bouton de copie
+                document.getElementById("password-field").value = password;
+                document.getElementById("share-message").innerHTML = `Voici votre mot de passe : <br><strong>${password}</strong><br><em>Ce mot de passe peut être copié et utilisé une seule fois.</em>`;
+
+                // Vérification si le mot de passe a déjà été utilisé
+                if (localStorage.getItem("passwordUsed") === "true") {
+                    document.getElementById("share-message").innerHTML += "<br><strong>Ce lien a déjà été utilisé et ne peut plus être utilisé.</strong>";
+                    document.getElementById("password-field").disabled = true;
+                }
+            } catch (error) {
+                document.getElementById("share-message").innerHTML = "Erreur lors du décryptage du mot de passe.";
+            }
+        } else {
+            document.getElementById("share-message").innerHTML = "Aucun mot de passe trouvé dans le lien.";
+        }
+    </script>
+</body>
+</html>
